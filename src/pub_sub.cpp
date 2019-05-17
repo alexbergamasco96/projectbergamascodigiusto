@@ -7,42 +7,30 @@
 
 class pub_sub{
 
-	std_msgs::String messagio;
-	std_msgs::String messagio2;
-
 	private:
 	ros::NodeHandle n; 
-
-	/*ros::Subscriber sub;
-	ros::Subscriber sub2;*/
-	message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subLeft(n, "speedL_stamped", 1);
-	message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subRight(n, "speedR_stamped", 1);
-	message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subSteer(n, "steer_stamped", 1);
-	message_filters::TimeSynchronizer<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> sync(subLeft, subRight, subSteer, 10);
-	
-	//idea: if function. if(odom=diff){sync.reg ... with callback1} else ...callback2
-	//callback1 compute differential drive, callback2 ackermann
-	sync.registerCallback(boost::bind(&callback, _1, _2, _3));
-
-	ros::Publisher pub; 
-	ros::Timer timer1;
-		
-		
+			
 	public:
 	pub_sub(){
-		
-		sub = n.subscribe("/chatter", 1, &pub_sub::callback, this);
-		sub2 = n.subscribe("/chatter2", 1, &pub_sub::callback2, this);
-		pub = n.advertise<std_msgs::String>("/rechatter", 1);
-		timer1 = n.createTimer(ros::Duration(1), &pub_sub::callback1, this);
+
+		message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subLeft(n, "speedL_stamped", 1);
+		message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subRight(n, "speedR_stamped", 1);
+		message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subSteer(n, "steer_stamped", 1);
+		message_filters::TimeSynchronizer<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> sync(subLeft, subRight, subSteer, 10);
+	
+		//idea: if function. if(odom=diff){sync.reg ... with callback1} else ...callback2
+		//callback1 compute differential drive, callback2 ackermann
+		//sync.registerCallback(boost::bind(&pub_sub::callback, _1, _2, _3));
 		
 	}
 
 
 
 	//Here compute the odometry.
-	void callback(const std_msgs::String::ConstPtr& msg){
-		messagio=*msg;
+	void callback(const projectbergamascodigiusto::floatStamped left, const projectbergamascodigiusto::floatStamped right, const projectbergamascodigiusto::floatStamped steer){
+
+		ROS_INFO ("Received a messages: (%f,%f,%f)", left.data  , right.data, steer.data);
+
 	}
 
 };

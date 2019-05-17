@@ -200,13 +200,13 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
-#add_executable(pub_sub
-#  src/pub_sub.cpp
-#)
-#add_dependencies(pub_sub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-#target_link_libraries(pub_sub
-#  ${catkin_LIBRARIES}
-#)
+add_executable(pub_sub
+  src/pub_sub.cpp
+)
+add_dependencies(pub_sub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(pub_sub
+  ${catkin_LIBRARIES}
+)
 
 ## dynamic reconfigure
 add_executable(dynamic_rcfg src/dynamic_rcfg.cpp)
