@@ -37,6 +37,7 @@ find_package(catkin REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   message_generation
   roscpp
+  dynamic_reconfigure
 )
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
@@ -84,10 +85,11 @@ generate_messages(DEPENDENCIES
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
+ generate_dynamic_reconfigure_options(
 #   cfg/DynReconf1.cfg
 #   cfg/DynReconf2.cfg
-# )
+  cfg/parameters.cfg
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -198,10 +200,15 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
-add_executable(pub_sub
-  src/pub_sub.cpp
-)
-add_dependencies(pub_sub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(pub_sub
-  ${catkin_LIBRARIES}
-)
+#add_executable(pub_sub
+#  src/pub_sub.cpp
+#)
+#add_dependencies(pub_sub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#target_link_libraries(pub_sub
+#  ${catkin_LIBRARIES}
+#)
+
+## dynamic reconfigure
+add_executable(dynamic_rcfg src/dynamic_rcfg.cpp)
+target_link_libraries(dynamic_rcfg ${catkin_LIBRARIES})
+add_dependencies(dynamic_rcfg ${PROJECT_NAME}_gencfg)
