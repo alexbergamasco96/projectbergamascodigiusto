@@ -35,6 +35,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp  std_msgs message_filters)
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
 find_package(catkin REQUIRED COMPONENTS
+  message_filters
   message_generation
   roscpp
   dynamic_reconfigure
