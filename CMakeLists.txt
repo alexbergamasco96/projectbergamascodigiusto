@@ -214,3 +214,11 @@ target_link_libraries(pub_sub
 add_executable(dynamic_rcfg src/dynamic_rcfg.cpp)
 target_link_libraries(dynamic_rcfg ${catkin_LIBRARIES})
 add_dependencies(dynamic_rcfg ${PROJECT_NAME}_gencfg)
+
+add_executable(msgs_filters
+  src/msgs_filters.cpp
+)
+add_dependencies(msgs_filters ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(msgs_filters
+  ${catkin_LIBRARIES}
+)

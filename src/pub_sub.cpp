@@ -22,14 +22,17 @@ class pub_sub{
 		message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subLeft(n, "speedL_stamped", 1);
 		message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subRight(n, "speedR_stamped", 1);
 		message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subSteer(n, "steer_stamped", 1);
-		typedef message_filters::sync_policies::ApproximateTime<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> MySyncPolicy;
+		typedef message_filters::sync_policies::ExactTime<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> MySyncPolicy;
 
   		message_filters::Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), subLeft, subRight,subSteer);
+		//  message_filters::TimeSynchronizer<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> sync( subLeft, subRight,subSteer,10);
 	    sync.registerCallback(boost::bind(&pub_sub::callback,this, _1, _2,_3));
 
 		//idea: if function. if(odom=diff){sync.reg ... with callback1} else ...callback2
 		//callback1 compute differential drive, callback2 ackermann
 		//sync.registerCallback(boost::bind(&pub_sub::callback, _1, _2, _3));
+				ROS_INFO("provaprova");
+				
 		
 	}
 
@@ -41,7 +44,7 @@ class pub_sub{
 		right1=*right;
 		steer1=*steer;
 		ROS_INFO ("Received a messages: (%f,%f,%f)", left1.data  , right1.data, steer1.data);
-
+		ROS_INFO("provaprova");
 	}
 
 };
