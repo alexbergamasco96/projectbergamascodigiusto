@@ -222,3 +222,12 @@ add_dependencies(msgs_filters ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPOR
 target_link_libraries(msgs_filters
   ${catkin_LIBRARIES}
 )
+
+
+add_executable(subscriber_bag
+  src/subscriber_bag.cpp
+)
+add_dependencies(subscriber_bag ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(subscriber_bag
+  ${catkin_LIBRARIES}
+)

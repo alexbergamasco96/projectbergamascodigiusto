@@ -9,6 +9,7 @@
 void callback(const projectbergamascodigiusto::floatStamped::ConstPtr& left, const projectbergamascodigiusto::floatStamped::ConstPtr& right, const projectbergamascodigiusto::floatStamped::ConstPtr& steer){
 	
 		ROS_INFO ("Received a messages: (%f,%f,%f)", left->data  , right->data, steer->data);
+    
 	}
 
 int main (int argc , char ** argv){

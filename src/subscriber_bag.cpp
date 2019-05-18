@@ -6,9 +6,9 @@
 #include <message_filters/sync_policies/exact_time.h>
 #include <message_filters/sync_policies/approximate_time.h>
 
-void callback(const projectbergamascodigiusto::floatStamped left, const projectbergamascodigiusto::floatStamped right, const projectbergamascodigiusto::floatStamped steer){
+void callback(const projectbergamascodigiusto::floatStampedConstPtr& left, const projectbergamascodigiusto::floatStampedConstPtr& right){
 
-		ROS_INFO ("Received a messages: (%f,%f,%f)", left.data  , right.data, steer.data);
+		ROS_INFO ("Received a messages: (%f, %f)", left->data  , right->data);
 
 	}
 
@@ -19,13 +19,13 @@ int main(int argc, char** argv)
 
   ros::NodeHandle n;
 
-  message_filters::Subscriber<geometry_msgs::Vector3Stamped> sub1(n, "topic1", 1);
-  message_filters::Subscriber<geometry_msgs::Vector3Stamped> sub2(n, "topic2", 1);
+  message_filters::Subscriber<projectbergamascodigiusto::floatStamped> sub1(n, "steerL_stamped", 1);
+  message_filters::Subscriber<projectbergamascodigiusto::floatStamped> sub2(n, "steerR_stamped", 1);
   
   //typedef message_filters::sync_policies::ExactTime<geometry_msgs::Vector3Stamped, geometry_msgs::Vector3Stamped> MySyncPolicy;
   
   //message filters with policy
-  typedef message_filters::sync_policies::ApproximateTime<geometry_msgs::Vector3Stamped, geometry_msgs::Vector3Stamped> MySyncPolicy;
+  typedef message_filters::sync_policies::ApproximateTime<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> MySyncPolicy;
   
   
   message_filters::Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), sub1, sub2);
