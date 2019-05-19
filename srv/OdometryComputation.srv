@@ -1,3 +1,4 @@
+float64  seconds
 float64 speedL
 float64 speedR
 float64 steer_sensor

@@ -27,6 +27,7 @@ class pub_sub{
 		ROS_INFO("[MESSAGE_FILTERS]DATI: (%f, %f , %f)", left->data, right->data, steer->data);
 
 		client=n.serviceClient<projectbergamascodigiusto::OdometryComputation>("compute_odometry");//name of channel,topic?
+		srv.request.seconds=ros::Time::now().toSec();
 		srv.request.speedL=left->data;
 		srv.request.speedR=right->data;
 		srv.request.steer_sensor=steer->data;

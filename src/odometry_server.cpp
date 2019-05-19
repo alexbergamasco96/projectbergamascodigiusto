@@ -3,6 +3,12 @@
 
 bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request &req,projectbergamascodigiusto::OdometryComputation::Response &res){
     ROS_INFO("[SERVER]  Request: vRight=%f,vLeft=%f,steerSensor=%f",(double)req.speedR,(double)req.speedL,(double)req.steer_sensor);
+    ROS_INFO("[TIME SERVER] time=%f",(double)req.seconds);
+
+    
+
+
+
     return true;
 }
 
