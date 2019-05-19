@@ -240,3 +240,11 @@ target_link_libraries(odometry_server
 )
 
 catkin_package(CATKIN_DEPENDS message_runtime)
+
+add_executable(tf_broadcast
+  src/tf_broadcast.cpp
+)
+add_dependencies(tf_broadcast ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(tf_broadcast
+  ${catkin_LIBRARIES}
+)
