@@ -7,6 +7,7 @@
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/sync_policies/exact_time.h>
 #include <message_filters/sync_policies/approximate_time.h>
+#include "projectbergamascodigiusto/OdometryComputation.h"
 
 
 
@@ -23,8 +24,22 @@ class pub_sub{
 		
 	}
 	void callback(const projectbergamascodigiusto::floatStampedConstPtr& left, const projectbergamascodigiusto::floatStampedConstPtr& right, const projectbergamascodigiusto::floatStampedConstPtr& steer){
-		
 		ROS_INFO("DATI: (%f, %f , %f)", left->data, right->data, steer->data);
+
+		client=n.serviceClient<projectbergamascodigiusto::OdometryComputation>("compute_odometry");//name of channel,topic?
+		srv.request.speedL=left->data;
+		srv.request.speedR=right->data;
+		srv.request.steer_sensor=steer->data;
+
+		if(client.call(srv)){
+        //ROS_INFO("Sum: %ld",(long int) srv.response.sum);
+		ROS_INFO("[Server Called]");
+
+   		 }
+
+ 		else{
+        ROS_ERROR("[Failed to call service]");
+    	}
 	}
 
 
@@ -33,6 +48,9 @@ class pub_sub{
 	message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subLeft;
 	message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subRight;
 	message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subSteer;
+	ros::ServiceClient client;
+	projectbergamascodigiusto::OdometryComputation srv;
+
 
 	typedef message_filters::sync_policies::ApproximateTime<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> MySyncPolicy;
 	typedef message_filters::Synchronizer<MySyncPolicy> Sync;

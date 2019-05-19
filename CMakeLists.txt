@@ -7,7 +7,8 @@ project(projectbergamascodigiusto)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp  std_msgs message_filters)
+find_package(catkin REQUIRED COMPONENTS
+  message_generation roscpp  std_msgs message_filters)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -53,11 +54,9 @@ add_message_files(FILES
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(FILES
+  OdometryComputation.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -231,3 +230,13 @@ add_dependencies(subscriber_bag ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXP
 target_link_libraries(subscriber_bag
   ${catkin_LIBRARIES}
 )
+
+add_executable(odometry_server
+  src/odometry_server.cpp
+)
+add_dependencies(odometry_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(odometry_server
+  ${catkin_LIBRARIES}
+)
+
+catkin_package(CATKIN_DEPENDS message_runtime)
