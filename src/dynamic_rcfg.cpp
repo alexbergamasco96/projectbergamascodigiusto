@@ -4,12 +4,12 @@
 #include <projectbergamascodigiusto/dynamicConfig.h>
 
 void callback(projectbergamascodigiusto::dynamicConfig &config, uint32_t level) {
-  ROS_INFO("Reconfigure Request.    Initial point (%d,%d)   Odometry type: %d", 
+  ROS_INFO("[DYNAMIC RECONFIGURE]    Initial point (%d,%d)   Odometry type: %d", 
             config.x_initial, config.y_initial, 
             config.odometry_type 
             );
             
-            ROS_INFO ("%d",level);
+            ROS_INFO ("[DYNAMIC RECONFIGURE]  Level:%d",level);
 }
 
 int main(int argc, char **argv) {
@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
   f = boost::bind(&callback, _1, _2);
   server.setCallback(f);
 
-  ROS_INFO("Spinning node");
+  ROS_INFO("[DYNAMIC RECONFIGURE] Spinning node");
   ros::spin();
   return 0;
 }

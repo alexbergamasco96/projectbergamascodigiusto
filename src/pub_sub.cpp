@@ -24,7 +24,7 @@ class pub_sub{
 		
 	}
 	void callback(const projectbergamascodigiusto::floatStampedConstPtr& left, const projectbergamascodigiusto::floatStampedConstPtr& right, const projectbergamascodigiusto::floatStampedConstPtr& steer){
-		ROS_INFO("DATI: (%f, %f , %f)", left->data, right->data, steer->data);
+		ROS_INFO("[MESSAGE_FILTERS]DATI: (%f, %f , %f)", left->data, right->data, steer->data);
 
 		client=n.serviceClient<projectbergamascodigiusto::OdometryComputation>("compute_odometry");//name of channel,topic?
 		srv.request.speedL=left->data;
@@ -33,12 +33,12 @@ class pub_sub{
 
 		if(client.call(srv)){
         //ROS_INFO("Sum: %ld",(long int) srv.response.sum);
-		ROS_INFO("[Server Called]");
+		ROS_INFO("[CLIENT] Server called");
 
    		 }
 
  		else{
-        ROS_ERROR("[Failed to call service]");
+        ROS_ERROR("[CLIENT] Fault on calling Server");
     	}
 	}
 
