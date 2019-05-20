@@ -6,3 +6,6 @@ float64 steer_sensor
 float64 x
 float64 y
 float64 steer_comput
+float64 vx
+float64 vy
+float64 vt
