@@ -38,6 +38,11 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
     ROS_INFO("[SERVER]  position: (x,y)=(%f,%f) theta=%f ",x_comput,y_comput,theta_comput);
     ROS_INFO("[SERVER] INFO: Ts=%f, w=%f, v=%f", t_s,w_k,v_k);
 
+    //response
+    res.x=x_comput;
+    res.y=y_comput;
+    res.steer_comput=theta_comput;
+
     x_before=x_comput;
     y_before=x_comput;
     time_before=(double)req.seconds;
