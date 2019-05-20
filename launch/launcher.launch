@@ -1,5 +1,5 @@
 <launch>
-<node pkg="rosbag" type="play" name="rosbag" output="screen" args="--clock $(find projectbergamascodigiusto)/bag_1.bag"/>
+<node pkg="rosbag" type="play" name="rosbag" output="screen" args="-r 0.05 $(find projectbergamascodigiusto)/bag_1.bag"/>
 <node pkg="projectbergamascodigiusto" name="subscribe_and_publish" type="pub_sub" output="screen"/>
 <node pkg="projectbergamascodigiusto" name="odometry_server" type="odometry_server" output="screen"/>
 <node pkg="projectbergamascodigiusto" name="dynamic_rcfg" type="dynamic_rcfg" output="screen"/>

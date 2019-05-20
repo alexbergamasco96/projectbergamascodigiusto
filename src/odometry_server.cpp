@@ -27,12 +27,14 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
 
     double v_k=0.5*((double)req.speedL+(double)req.speedR); //velocity
     double t_s=(double)req.seconds-time_before; //tempo campionamento 
-    double w_k=((double)req.speedL+(double)req.speedR)/l;
+    double w_k=((double)req.speedL-(double)req.speedR)/l;
 
+    double vx=v_k*cos(theta_before);
+    double vy=v_k*sin(theta_before);
     
     //Euler
-    x_comput=x_before+v_k*t_s*cos(theta_before);
-    y_comput=y_before+v_k*t_s*sin(theta_before);
+    x_comput=x_before+t_s*vx;
+    y_comput=y_before+t_s*vy;
     theta_comput=theta_before+w_k*t_s;
 
     ROS_INFO("[SERVER]  position: (x,y)=(%f,%f) theta=%f ",x_comput,y_comput,theta_comput);
@@ -42,6 +44,9 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
     res.x=x_comput;
     res.y=y_comput;
     res.steer_comput=theta_comput;
+    res.vx=vx;
+    res.vy=vy;
+    res.vt=w_k;
 
     x_before=x_comput;
     y_before=x_comput;
