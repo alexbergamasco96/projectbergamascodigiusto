@@ -9,7 +9,7 @@
 #include <message_filters/sync_policies/approximate_time.h>
 #include "projectbergamascodigiusto/OdometryComputation.h"
 #include <nav_msgs/Odometry.h>
-#include "projectbergamascodigiusto/position.h"
+#include <tf/transform_broadcaster.h>
 
 
 
@@ -21,7 +21,7 @@ class pub_sub{
 		subLeft.subscribe(n, "speedL_stamped", 1);
 		subRight.subscribe(n, "speedR_stamped", 1);
 		subSteer.subscribe(n, "steer_stamped", 1);
-		pub = n.advertise<projectbergamascodigiusto::position>("/robot_pose",1);
+		pub = n.advertise<nav_msgs::Odometry>("odom",1);
 
 		sync.reset(new Sync(MySyncPolicy(10), subLeft, subRight,subSteer));
 		sync->registerCallback(boost::bind(&pub_sub::callback, this, _1, _2, _3));	
@@ -42,10 +42,14 @@ class pub_sub{
         	//ROS_INFO("Sum: %ld",(long int) srv.response.sum);
 			ROS_INFO("[CLIENT] Server called");
 			ROS_INFO("[CLIENT] Send to tf the msg");
-			pos.x = srv.response.x;
-			pos.y = srv.response.y;
-			pos.theta = srv.response.steer_comput;
-			pub.publish(pos);
+			odom.header.stamp = ros::Time::now();
+			odom.header.frame_id = "odom";
+			odom.pose.pose.position.x = srv.response.x;
+			odom.pose.pose.position.y = srv.response.y;
+			odom.pose.pose.position.z = 0.0;
+			geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(srv.response.steer_comput);
+			odom.pose.pose.orientation = odom_quat;
+			pub.publish(odom);
 
    		 }
 
@@ -66,7 +70,7 @@ class pub_sub{
 	ros::ServiceClient client;
 	projectbergamascodigiusto::OdometryComputation srv;
 	ros::Publisher  pub;
-	projectbergamascodigiusto::position pos;
+	nav_msgs::Odometry odom;
 
 	typedef message_filters::sync_policies::ApproximateTime<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> MySyncPolicy;
 	typedef message_filters::Synchronizer<MySyncPolicy> Sync;
