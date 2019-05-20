@@ -7,7 +7,7 @@ class tf_sub_pub{
 
     public:
         tf_sub_pub(){
-            sub = n.subscribe("/robot/pose", 1000, &tf_sub_pub::callback, this);
+            sub = n.subscribe("/robot_pose", 1000, &tf_sub_pub::callback, this);
         }
     
     void callback(const nav_msgs::OdometryConstPtr& msg){

@@ -8,6 +8,8 @@
 #include <message_filters/sync_policies/exact_time.h>
 #include <message_filters/sync_policies/approximate_time.h>
 #include "projectbergamascodigiusto/OdometryComputation.h"
+#include <nav_msgs/Odometry.h>
+#include "projectbergamascodigiusto/position.h"
 
 
 
@@ -19,9 +21,13 @@ class pub_sub{
 		subLeft.subscribe(n, "speedL_stamped", 1);
 		subRight.subscribe(n, "speedR_stamped", 1);
 		subSteer.subscribe(n, "steer_stamped", 1);
+		pub = n.advertise<projectbergamascodigiusto::position>("/robot_pose",1);
+
 		sync.reset(new Sync(MySyncPolicy(10), subLeft, subRight,subSteer));
 		sync->registerCallback(boost::bind(&pub_sub::callback, this, _1, _2, _3));	
 		
+		
+
 	}
 	void callback(const projectbergamascodigiusto::floatStampedConstPtr& left, const projectbergamascodigiusto::floatStampedConstPtr& right, const projectbergamascodigiusto::floatStampedConstPtr& steer){
 		ROS_INFO("[MESSAGE_FILTERS]DATI: (%f, %f , %f)", left->data, right->data, steer->data);
@@ -33,14 +39,22 @@ class pub_sub{
 		srv.request.steer_sensor=steer->data;
 
 		if(client.call(srv)){
-        //ROS_INFO("Sum: %ld",(long int) srv.response.sum);
-		ROS_INFO("[CLIENT] Server called");
+        	//ROS_INFO("Sum: %ld",(long int) srv.response.sum);
+			ROS_INFO("[CLIENT] Server called");
+			ROS_INFO("[CLIENT] Send to tf the msg");
+			pos.x = srv.response.x;
+			pos.y = srv.response.y;
+			pos.theta = srv.response.steer_comput;
+			pub.publish(pos);
 
    		 }
 
  		else{
         ROS_ERROR("[CLIENT] Fault on calling Server");
     	}
+
+		
+
 	}
 
 
@@ -51,7 +65,8 @@ class pub_sub{
 	message_filters::Subscriber<projectbergamascodigiusto::floatStamped> subSteer;
 	ros::ServiceClient client;
 	projectbergamascodigiusto::OdometryComputation srv;
-
+	ros::Publisher  pub;
+	projectbergamascodigiusto::position pos;
 
 	typedef message_filters::sync_policies::ApproximateTime<projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped, projectbergamascodigiusto::floatStamped> MySyncPolicy;
 	typedef message_filters::Synchronizer<MySyncPolicy> Sync;
