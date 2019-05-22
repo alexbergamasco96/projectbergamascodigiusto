@@ -12,6 +12,7 @@
 #include <tf/transform_broadcaster.h>
 #include <dynamic_reconfigure/server.h>
 #include <projectbergamascodigiusto/dynamicConfig.h>
+#include "projectbergamascodigiusto/computedOdom.h"
 
 
 
@@ -25,6 +26,7 @@ class pub_sub{
 		subRight.subscribe(n, "speedR_stamped", 1);
 		subSteer.subscribe(n, "steer_stamped", 1);
 		pub = n.advertise<nav_msgs::Odometry>("odom",1);
+		pub2 = n.advertise<projectbergamascodigiusto::computedOdom>("computed_odometry", 1);
 		sync.reset(new Sync(MySyncPolicy(10), subLeft, subRight,subSteer));
 
 		//Dynamic reconfigure
@@ -82,6 +84,14 @@ class pub_sub{
 			geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(srv.response.steer_comput);
 			odom.pose.pose.orientation = odom_quat;
 			pub.publish(odom);
+			computed_odom.odometry = odom;
+			if(odom_set == 1){
+				computed_odom.type = "Differential";
+			}else{
+				computed_odom.type = "Ackerman";
+			}
+
+			pub2.publish(computed_odom);
 
 			changed=false; 
 
@@ -104,7 +114,9 @@ class pub_sub{
 	ros::ServiceClient client;
 	projectbergamascodigiusto::OdometryComputation srv;
 	ros::Publisher  pub;
+	ros::Publisher pub2;
 	nav_msgs::Odometry odom;
+	projectbergamascodigiusto::computedOdom computed_odom;
 	dynamic_reconfigure::Server<projectbergamascodigiusto::dynamicConfig> server_dynamic;
 	dynamic_reconfigure::Server<projectbergamascodigiusto::dynamicConfig>::CallbackType f;
 	int x_init_set;
