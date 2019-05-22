@@ -1,3 +1,7 @@
+bool changed
+int32 x_init
+int32 y_init
+int32 algorithm
 float64  seconds
 float64 speedL
 float64 speedR

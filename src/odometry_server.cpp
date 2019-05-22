@@ -18,13 +18,20 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
     ROS_INFO("[SERVER]  Request: vLeft=%f,vRight=%f,steerSensor=%f",(double)req.speedL,(double)req.speedR,(double)req.steer_sensor);
     ROS_INFO("[TIME SERVER] time=%f",(double)req.seconds);
 
+    //INIT
+
     double l=0.130;
-    if(count==0){
-        x_before=0;
-        y_before=0;
+    if((bool)req.changed){
+        x_before=(double)req.x_init;
+        y_before=(double)req.y_init;
         theta_before=0;
     }
 
+
+
+
+     //EULER
+    if(req.algorithm==1){
     double v_k=0.5*((double)req.speedL+(double)req.speedR); //velocity
     double t_s=(double)req.seconds-time_before; //tempo campionamento 
     double w_k=((double)req.speedL-(double)req.speedR)/l;
@@ -52,7 +59,16 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
     y_before=x_comput;
     time_before=(double)req.seconds;
     theta_before=theta_comput;
-    count++;
+    }
+    //count++;
+    if(req.algorithm==2){
+        //ACKERMAN
+
+
+
+
+
+    }
 
     //send as response
 
