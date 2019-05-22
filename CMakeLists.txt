@@ -41,6 +41,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   dynamic_reconfigure
   tf
+  nav_msgs
 )
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
@@ -51,7 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
 add_message_files(FILES
-  position.msg
+  computedOdom.msg
   floatStamped.msg
 )
 
@@ -70,6 +71,7 @@ add_service_files(FILES
 ## Generate added messages and services with any dependencies listed here
 generate_messages(DEPENDENCIES
   std_msgs
+  nav_msgs
 )
 
 ################################################

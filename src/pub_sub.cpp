@@ -64,7 +64,8 @@ class pub_sub{
 		srv.request.y_init=y_init_set;
 		srv.request.algorithm=odom_set;
 
-		srv.request.seconds=ros::Time::now().toSec();
+		//srv.request.seconds=ros::Time::now().toSec();
+		srv.request.seconds=(left->header.stamp.toSec() + right->header.stamp.toSec())/2;
 		srv.request.speedL=left->data;
 		srv.request.speedR=right->data;
 		srv.request.steer_sensor=steer->data;
