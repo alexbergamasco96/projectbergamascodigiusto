@@ -213,28 +213,6 @@ target_link_libraries(pub_sub
   ${catkin_LIBRARIES}
 )
 
-## dynamic reconfigure
-add_executable(dynamic_rcfg src/dynamic_rcfg.cpp)
-target_link_libraries(dynamic_rcfg ${catkin_LIBRARIES})
-add_dependencies(dynamic_rcfg ${PROJECT_NAME}_gencfg)
-
-add_executable(msgs_filters
-  src/msgs_filters.cpp
-)
-add_dependencies(msgs_filters ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(msgs_filters
-  ${catkin_LIBRARIES}
-)
-
-
-add_executable(subscriber_bag
-  src/subscriber_bag.cpp
-)
-add_dependencies(subscriber_bag ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(subscriber_bag
-  ${catkin_LIBRARIES}
-)
-
 add_executable(odometry_server
   src/odometry_server.cpp
 )
