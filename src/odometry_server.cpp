@@ -86,10 +86,13 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
             t_s=(double)req.seconds-time_before;
             v_k = 0.5*((double)req.speedL + (double)req.speedR);
             alpha = (double)req.steer_sensor / steering_factor;
-            w_k = (v_k * tan(alpha)) / d;
+            
 
             vx = v_k*cos(alpha);
             vy = v_k*sin(alpha);
+
+            alpha = (alpha*3.14)/180;
+            w_k = (v_k * tan(alpha)) / (double)d;
 
             //Euler
             /*x_comput=x_before+t_s*vx;
