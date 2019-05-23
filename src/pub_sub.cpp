@@ -122,6 +122,7 @@ class pub_sub{
 	int x_init_set;
 	int y_init_set;
 	int odom_set;
+	
 	bool changed; //if it is changed the dynamic reconfig
 
 

@@ -1,7 +1,8 @@
 #include "ros/ros.h"
 #include <cmath> 
 #include "projectbergamascodigiusto/OdometryComputation.h"
-
+int x_current_dynamic;
+int y_current_dynamic;
 
 double time_before;
 double x_before;
@@ -21,34 +22,40 @@ double alpha;
 double vx;
 double vy;
 
-const double l=0.130; //Sarebbe 1.30 ma per una questione grafica mettiamo 0.130
+const double l=1.30; //Sarebbe 1.30 ma per una questione grafica mettiamo 0.130
 const double steering_factor = 18;
 const double d = 1.765;
 
+void xy_is_changed(int x_changed,int y_changed){
+    if(count!=0 && (x_changed!=x_current_dynamic || y_changed!=y_current_dynamic)) {
+        x_before=(double)x_changed;
+        y_before=(double)y_changed;
+        theta_before=0;
+    }
+}
 
 
 bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request &req,projectbergamascodigiusto::OdometryComputation::Response &res){
     ROS_INFO("[SERVER]  Request: vLeft=%f,vRight=%f,steerSensor=%f",(double)req.speedL,(double)req.speedR,(double)req.steer_sensor);
     ROS_INFO("[TIME SERVER] time=%f",(double)req.seconds);
+    xy_is_changed(req.x_init,req.y_init);
 
     //INIT
-
-
-    if((bool)req.changed){
+    /*
+    if(xy_init_changed){
         x_before=(double)req.x_init;
         y_before=(double)req.y_init;
         theta_before=0;
     }
-
-
-
+    */
+    
 
      //EULER
     switch(req.algorithm){
         case (1):   //Differential drive
             v_k=0.5*((double)req.speedL+(double)req.speedR); //velocity
             t_s=(double)req.seconds-time_before; //tempo campionamento time
-            w_k=((double)req.speedL-(double)req.speedR)/l;
+            w_k=((double)req.speedR-(double)req.speedL)/l;
 
             vx=v_k*cos(theta_before);
             vy=v_k*sin(theta_before);
@@ -122,6 +129,10 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
             break;
         
     }
+
+    count++;
+    x_current_dynamic=req.x_init;
+    y_current_dynamic=req.y_init;
 
     //send as response
 
