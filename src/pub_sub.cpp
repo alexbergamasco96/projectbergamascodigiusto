@@ -40,6 +40,7 @@ class pub_sub{
 
 	}
 
+//Callback for the dynamic reconfigure
 	void callback_dynamic_reconfigure(projectbergamascodigiusto::dynamicConfig &config, uint32_t level) {
 			x_init_set=config.x_initial;
 			y_init_set=config.y_initial;
@@ -51,29 +52,25 @@ class pub_sub{
             );
 
 			changed=true;
+	}
 
-
-            //ROS_INFO ("[DYNAMIC RECONFIGURE]  Level:%d",level);
-}
-
-
+//Callback of the message filter
 	void callback(const projectbergamascodigiusto::floatStampedConstPtr& left, const projectbergamascodigiusto::floatStampedConstPtr& right, const projectbergamascodigiusto::floatStampedConstPtr& steer){
 		ROS_INFO("[MESSAGE_FILTERS]DATI: (%f, %f , %f)", left->data, right->data, steer->data);
 
-		client=n.serviceClient<projectbergamascodigiusto::OdometryComputation>("compute_odometry");//name of channel,topic?
+		client=n.serviceClient<projectbergamascodigiusto::OdometryComputation>("compute_odometry");
+
+		//Request of the service
 		srv.request.changed=changed;
 		srv.request.x_init=x_init_set;
 		srv.request.y_init=y_init_set;
 		srv.request.algorithm=odom_set;
-
-		//srv.request.seconds=ros::Time::now().toSec();
 		srv.request.seconds=(left->header.stamp.toSec() + right->header.stamp.toSec())/2;
 		srv.request.speedL=left->data;
 		srv.request.speedR=right->data;
 		srv.request.steer_sensor=steer->data;
 
 		if(client.call(srv)){
-        	//ROS_INFO("Sum: %ld",(long int) srv.response.sum);
 			ROS_INFO("[CLIENT] Server called");
 			ROS_INFO("[CLIENT] Send to tf the msg");
 			odom.header.stamp = ros::Time::now();
@@ -90,21 +87,14 @@ class pub_sub{
 			}else{
 				computed_odom.type = "Ackerman";
 			}
-
 			pub2.publish(computed_odom);
-
 			changed=false; 
-
    		 }
 
  		else{
         ROS_ERROR("[CLIENT] Fault on calling Server");
     	}
-
-		
-
 	}
-
 
 	private:
 	ros::NodeHandle n; 
@@ -123,7 +113,7 @@ class pub_sub{
 	int y_init_set;
 	int odom_set;
 	
-	bool changed; //if it is changed the dynamic reconfig
+	bool changed; //For the call of the service
 
 
 
@@ -132,9 +122,6 @@ class pub_sub{
 	boost::shared_ptr<Sync> sync;
 
 };
-
-
-
 
 //Classic main of pub_sub in the same node
 

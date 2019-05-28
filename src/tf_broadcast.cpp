@@ -11,15 +11,7 @@ class tf_sub_pub{
         }
     
     void callback(const nav_msgs::Odometry& odom){
-        /*tf::Transform transform;
-        transform.setOrigin( tf::Vector3(msg->pose.pose.position.x, msg->pose.pose.position.y, 0));
-        tf::Quaternion q;
-        q.setRPY(0,0,0);//msg->pose.pose.orientation);
-        //è da fixare il puntatore sopra
-        transform.setRotation(q);
-        br.sendTransform( tf::StampedTransform(transform, ros::Time::now(), "world", "robot")); 
-        */
-   
+        
        //first, we'll publish the transform over tf
        geometry_msgs::TransformStamped odom_trans;
        odom_trans.header.stamp = ros::Time::now();
@@ -34,21 +26,15 @@ class tf_sub_pub{
        //send the transform
        br.sendTransform(odom_trans);
 
-       
-       
-
-
     }
 
     private:
     ros::NodeHandle n;
     tf::TransformBroadcaster br;
     ros::Subscriber sub;
-    
-
 };
 
-
+//Main
 int main(int argc, char **argv){
 
     ros::init(argc, argv, "tf_broad");

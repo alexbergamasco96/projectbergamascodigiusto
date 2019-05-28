@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include <cmath> 
 #include "projectbergamascodigiusto/OdometryComputation.h"
+//initial point x,y set by the dynamic reconfigure in the step before.Needed for checking and changing
 int x_current_dynamic;
 int y_current_dynamic;
 
@@ -16,16 +17,19 @@ double theta_comput;
 int count;
 
 double v_k; //velocity
-double t_s; //tempo campionamento time
+double t_s; 
 double w_k;
 double alpha;
 double vx;
 double vy;
 
-const double l=1.30; //Sarebbe 1.30 ma per una questione grafica mettiamo 0.130
+//Features of the car
+const double l=1.30; 
 const double steering_factor = 18;
 const double d = 1.765;
 
+
+//check (and change) if dynamic reconfigure has changed the initial point (x,y)
 void xy_is_changed(int x_changed,int y_changed){
     if(count!=0 && (x_changed!=x_current_dynamic || y_changed!=y_current_dynamic)) {
         x_before=(double)x_changed;
@@ -34,22 +38,12 @@ void xy_is_changed(int x_changed,int y_changed){
     }
 }
 
-
+//Service that computes odometry
 bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request &req,projectbergamascodigiusto::OdometryComputation::Response &res){
     ROS_INFO("[SERVER]  Request: vLeft=%f,vRight=%f,steerSensor=%f",(double)req.speedL,(double)req.speedR,(double)req.steer_sensor);
     ROS_INFO("[TIME SERVER] time=%f",(double)req.seconds);
     xy_is_changed(req.x_init,req.y_init);
-
-    //INIT
-    /*
-    if(xy_init_changed){
-        x_before=(double)req.x_init;
-        y_before=(double)req.y_init;
-        theta_before=0;
-    }
-    */
     
-
      //EULER
     switch(req.algorithm){
         case (1):   //Differential drive
@@ -61,9 +55,12 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
             vy=v_k*sin(theta_before);
             
             //Euler
-            /*x_comput=x_before+t_s*vx;
+
+            /*
+            x_comput=x_before+t_s*vx;
             y_comput=y_before+t_s*vy;
-            theta_comput=theta_before+w_k*t_s;*/
+            theta_comput=theta_before+w_k*t_s;
+            */
 
             //Runge-kutta
             x_comput = x_before + v_k*t_s*cos(theta_before + (w_k*t_s)*0.5);
@@ -86,7 +83,6 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
             time_before=(double)req.seconds;
             theta_before=theta_comput;
             
-            //count++;
             break;
 
         case (2):     //Ackerman
@@ -102,9 +98,11 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
             w_k = (v_k * tan(alpha)) / (double)d;
 
             //Euler
-            /*x_comput=x_before+t_s*vx;
+            /*
+            x_comput=x_before+t_s*vx;
             y_comput=y_before+t_s*vy;
-            theta_comput=theta_before+w_k*t_s;*/
+            theta_comput=theta_before+w_k*t_s;
+            */
 
             //Runge-Kutta
             x_comput = x_before + v_k*t_s*cos(theta_before + (w_k*t_s)*0.5);
@@ -113,6 +111,8 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
 
             ROS_INFO("[SERVER]  position: (x,y)=(%f,%f) theta=%f ",x_comput,y_comput,theta_comput);
             ROS_INFO("[SERVER] INFO: Ts=%f, w=%f, v=%f, alpha=%f", t_s,w_k,v_k, alpha);
+
+            //Response
 
             res.x=x_comput;
             res.y=y_comput;
@@ -130,12 +130,9 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
         
     }
 
-    count++;
     x_current_dynamic=req.x_init;
     y_current_dynamic=req.y_init;
-
-    //send as response
-
+    count++; //for the function xy_is_changed(int,int)
 
     return true;
 }
