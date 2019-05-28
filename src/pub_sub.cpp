@@ -20,7 +20,6 @@ class pub_sub{
 
 	public:
 	pub_sub(){
-		changed=false;
 
 		subLeft.subscribe(n, "speedL_stamped", 1);
 		subRight.subscribe(n, "speedR_stamped", 1);
@@ -44,14 +43,14 @@ class pub_sub{
 	void callback_dynamic_reconfigure(projectbergamascodigiusto::dynamicConfig &config, uint32_t level) {
 			x_init_set=config.x_initial;
 			y_init_set=config.y_initial;
+			theta_init_set=config.theta_initial;
 			odom_set=config.odometry_type;
 
-  			ROS_INFO("[DYNAMIC RECONFIGURE]    Initial point (%d,%d)   Odometry type: %d", 
-            x_init_set, y_init_set, 
+  			ROS_INFO("[DYNAMIC RECONFIGURE]    Initial point (%d,%d) Theta initial: %d   Odometry type: %d", 
+            x_init_set, y_init_set, theta_init_set, 
             odom_set 
             );
 
-			changed=true;
 	}
 
 //Callback of the message filter
@@ -61,7 +60,7 @@ class pub_sub{
 		client=n.serviceClient<projectbergamascodigiusto::OdometryComputation>("compute_odometry");
 
 		//Request of the service
-		srv.request.changed=changed;
+		srv.request.theta_init=theta_init_set;
 		srv.request.x_init=x_init_set;
 		srv.request.y_init=y_init_set;
 		srv.request.algorithm=odom_set;
@@ -88,7 +87,6 @@ class pub_sub{
 				computed_odom.type = "Ackerman";
 			}
 			pub2.publish(computed_odom);
-			changed=false; 
    		 }
 
  		else{
@@ -111,9 +109,9 @@ class pub_sub{
 	dynamic_reconfigure::Server<projectbergamascodigiusto::dynamicConfig>::CallbackType f;
 	int x_init_set;
 	int y_init_set;
+	int theta_init_set; //in degree
 	int odom_set;
 	
-	bool changed; //For the call of the service
 
 
 

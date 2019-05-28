@@ -4,6 +4,7 @@
 //initial point x,y set by the dynamic reconfigure in the step before.Needed for checking and changing
 int x_current_dynamic;
 int y_current_dynamic;
+int theta_current_dynamic;
 
 double time_before;
 double x_before;
@@ -29,12 +30,12 @@ const double steering_factor = 18;
 const double d = 1.765;
 
 
-//check (and change) if dynamic reconfigure has changed the initial point (x,y)
-void xy_is_changed(int x_changed,int y_changed){
-    if(count!=0 && (x_changed!=x_current_dynamic || y_changed!=y_current_dynamic)) {
+//check (and change) if dynamic reconfigure has changed the initial point (x,y) and theta
+void xy_is_changed(int x_changed,int y_changed,int theta_changed){
+    if(count!=0 && (x_changed!=x_current_dynamic || y_changed!=y_current_dynamic || theta_changed!=theta_current_dynamic ) ) {
         x_before=(double)x_changed;
         y_before=(double)y_changed;
-        theta_before=0;
+        theta_before=(theta_changed*3.14)/180;
     }
 }
 
@@ -42,7 +43,7 @@ void xy_is_changed(int x_changed,int y_changed){
 bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request &req,projectbergamascodigiusto::OdometryComputation::Response &res){
     ROS_INFO("[SERVER]  Request: vLeft=%f,vRight=%f,steerSensor=%f",(double)req.speedL,(double)req.speedR,(double)req.steer_sensor);
     ROS_INFO("[TIME SERVER] time=%f",(double)req.seconds);
-    xy_is_changed(req.x_init,req.y_init);
+    xy_is_changed(req.x_init,req.y_init,req.theta_init);
     
      //EULER
     switch(req.algorithm){
@@ -132,6 +133,7 @@ bool odometryComputation(projectbergamascodigiusto::OdometryComputation::Request
 
     x_current_dynamic=req.x_init;
     y_current_dynamic=req.y_init;
+    theta_current_dynamic=req.theta_init;
     count++; //for the function xy_is_changed(int,int)
 
     return true;

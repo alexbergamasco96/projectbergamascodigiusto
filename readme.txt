@@ -6,12 +6,12 @@ ID, name, surname of all team members
 -description of how to start/use the nodes
 -info you think are important/interesting
 
-//////////////////////////////////////////////////
+/***************************************************************************************************************/
 Team Members:
 	-Federico Di Giusto, 10693473
 	-Alex Bergamasco,
 
-
+/***************************************************************************************************************/
 Files inside the folder /projectbergamascodigiusto:
 
 	-/cfg/parameters.cfg 
@@ -35,14 +35,33 @@ Files inside the folder /projectbergamascodigiusto:
 			Subscriber for the topic /odom (it passes the nav_msgs).
 			Set the transormation and send it.
 	-/launch/launcher.launch
-			TODOTODO
+			launch file
 
-name of the parameter to change odometry source/set/reset position
--structure of the tf tree
--structure of the custom message
--description of how to start/use the nodes
+/***************************************************************************************************************/
+Dynamic reconfigure paramters:
+
+	"x_initial": initial x, integer, default 0
+	"y_initial": initial y, integer, default 0
+	"theta_initial": theta_initial (in degree), integer, default 0
+	"odometry_type": Differential or Ackerman, integer
+
+
+/***************************************************************************************************************/
+Structure of the tf tree:
+/***************************************************************************************************************/
+Structure of the custom message:
+/***************************************************************************************************************/
+Description of how to start/use the nodes:
+	rosrun projectbergamascodigiusto pub_sub
+	rosrun projectbergamascodigiusto odometry_server
+	rosrun projectbergamascodigiusto tf_broadcast
+	rosrun rqt_reconfigure rqt_reconfigure 	//set subscribe_and_publish
+
+Otherwise,
+ roslaunch projectbergamascodigiusto/launch/launcher.launch
+ 	It will launch all the nodes specified before (also rqt_reconfigure).
+
+/***************************************************************************************************************/
 -info you think are important/interesting
 
-
-	
-
+TODO
