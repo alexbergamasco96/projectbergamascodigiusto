@@ -15,7 +15,7 @@ class tf_sub_pub{
        //first, we'll publish the transform over tf
        geometry_msgs::TransformStamped odom_trans;
        odom_trans.header.stamp = ros::Time::now();
-       odom_trans.header.frame_id = "map";
+       odom_trans.header.frame_id = "world";
        odom_trans.child_frame_id = "robot";
    
        odom_trans.transform.translation.x = odom.pose.pose.position.x;

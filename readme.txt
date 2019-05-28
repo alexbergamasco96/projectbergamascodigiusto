@@ -9,7 +9,7 @@ ID, name, surname of all team members
 /***************************************************************************************************************/
 Team Members:
 	-Federico Di Giusto, 10693473
-	-Alex Bergamasco,
+	-Alex Bergamasco, 10521973
 
 /***************************************************************************************************************/
 Files inside the folder /projectbergamascodigiusto:
@@ -48,8 +48,17 @@ Dynamic reconfigure paramters:
 
 /***************************************************************************************************************/
 Structure of the tf tree:
+
+	The TF TREE is simply composed by the World (the fixed frame) and the robot (represented by a single point).
+	We have created a node (tf_broadcast) that sends the transformation from the father -world- to the child -robot-.
+
 /***************************************************************************************************************/
 Structure of the custom message:
+
+	We have created two different custom messages:
+		- floatStamped (Header, float64) : useful to extract data from the bag.
+		- computedOdom (string, nav_msgs::Odometry) : final message to send the type of odometry (DDK or Ackerman) and the odometry.
+
 /***************************************************************************************************************/
 Description of how to start/use the nodes:
 	rosrun projectbergamascodigiusto pub_sub
@@ -63,5 +72,10 @@ Otherwise,
 
 /***************************************************************************************************************/
 -info you think are important/interesting
+
+	The odometry is computed by a service. It is not necessary but it seems a good idea in order to make the project more modular.
+	We have also created a separate node in which we send the transformation.
+	
+	We are aware that we could have done everything inside a node but from a design point of view it seemed clearer in this way.
 
 TODO
