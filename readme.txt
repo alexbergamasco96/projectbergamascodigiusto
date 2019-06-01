@@ -1,24 +1,18 @@
-ID, name, surname of all team members
--small description of the files inside the archive
--name of the parameter to change odometry source/set/reset position
--structure of the tf tree
--structure of the custom message
--description of how to start/use the nodes
--info you think are important/interesting
+
 
 /***************************************************************************************************************/
 Team Members:
-	-Federico Di Giusto, 10693473
-	-Alex Bergamasco, 10521973
+	-Federico Di Giusto, 	10693473
+	-Alex Bergamasco, 		10521973
 
 /***************************************************************************************************************/
 Files inside the folder /projectbergamascodigiusto:
 
 	-/cfg/parameters.cfg 
 		File python for the options of the dynamic reconfigure.
-		Through it, we set x,y initial (as int), and the type of odometry (Differential or Ackerman, through an enumeration)
+		Through it, we set x,y,theta(angle) initial (as int), and the type of odometry (Differential or Ackerman, through an enumeration)
 	-/msg/computedOdom.msg
-		Custom message published as topic /computed_odometry
+		Custom message published in the topic "/computed_odometry"
 	-/srv/OdometryComputation.srv 
 		Request and response structure of the service used for the computation of the odometry.
 	-/src/
@@ -32,7 +26,7 @@ Files inside the folder /projectbergamascodigiusto:
 		/odometry_server.cpp
 			Server for the computation of the odometry.
 		/tf_broadcast.cpp
-			Subscriber for the topic /odom (it passes the nav_msgs).
+			Subscriber for the topic "/odom" (it passes the nav_msgs).
 			Set the transormation and send it.
 	-/launch/launcher.launch
 			launch file
@@ -43,7 +37,7 @@ Dynamic reconfigure paramters:
 	"x_initial": initial x, integer, default 0
 	"y_initial": initial y, integer, default 0
 	"theta_initial": theta_initial (in degree), integer, default 0
-	"odometry_type": Differential or Ackerman, integer
+	"odometry_type": Differential or Ackerman, integer, default Differential
 
 
 /***************************************************************************************************************/
@@ -57,7 +51,7 @@ Structure of the custom message:
 
 	We have created two different custom messages:
 		- floatStamped (Header, float64) : useful to extract data from the bag.
-		- computedOdom (string, nav_msgs::Odometry) : final message to send the type of odometry (DDK or Ackerman) and the odometry.
+		- computedOdom (string, nav_msgs::Odometry) : final message to send the type of odometry (Differential or Ackerman) and the odometry.
 
 /***************************************************************************************************************/
 Description of how to start/use the nodes:
@@ -77,5 +71,7 @@ Otherwise,
 	We have also created a separate node in which we send the transformation.
 	
 	We are aware that we could have done everything inside a node but from a design point of view it seemed clearer in this way.
+
+	To compute the robot odometry we used Runge-Kutta integration but there is also the implementation of Eulero integration and this is commented in the code.
 
 TODO

@@ -1,5 +1,4 @@
 <launch>
-<node pkg="rosbag" type="play" name="rosbag" output="screen" args="-l $(find projectbergamascodigiusto)/bag_1.bag"/>
 <node pkg="projectbergamascodigiusto" name="subscribe_and_publish" type="pub_sub" output="screen"/>
 <node pkg="projectbergamascodigiusto" name="odometry_server" type="odometry_server" output="screen"/>
 
